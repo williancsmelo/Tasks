@@ -1,0 +1,1 @@
+export { Tarefas } from './Tarefas'

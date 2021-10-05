@@ -1,14 +1,9 @@
 import React, { useState, useRef } from 'react';
 import {
   View,
-  TouchableOpacity,
-  Alert,
-  Modal,
-  TextInput
+  TouchableOpacity
 } from 'react-native';
 import { Icon } from 'react-native-elements'
-import {Picker} from '@react-native-picker/picker';
-import { Button, Text } from 'react-native-paper';
 import ModalNovaTarefa from './ModalNovaTarefa';
 
 export default function (){
