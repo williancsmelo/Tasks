@@ -1,11 +1,12 @@
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm/browser';
+import 'reflect-metadata'
 
-@Entity('tarefas')
+@Entity()
 export class Tarefas {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
-  @Column({ type: 'varchar', name: 'NOME', length: 70, nullable: true })
+  @Column({ type: 'varchar', name: 'NOME', length: 70, nullable: false })
   nome: string;
 
   @Column({ type: 'varchar', name: 'PRIORIDADE', length: 10, nullable: false })
@@ -17,9 +18,9 @@ export class Tarefas {
   @Column({ type: 'varchar', name: 'STATUS', length: 10, nullable: false })
   status: string;
 
-  @Column({ type: 'varchar', name: 'DATA_CRIACAO', nullable: false })
+  @Column({ type: 'varchar', name: 'DATA_CRIACAO', length: 10, nullable: false })
   dataCriacao: string;
 
-  @Column({ type: 'varchar', name: 'DATA_CONCLUSAO', nullable: true })
+  @Column({ type: 'varchar', name: 'DATA_CONCLUSAO', length: 10, nullable: true })
   dataConclusao: string;
 }

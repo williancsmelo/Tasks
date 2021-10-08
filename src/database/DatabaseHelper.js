@@ -1,37 +1,48 @@
-import { Tarefas } from './entities';
-import {getConnectionManager, getRepository} from 'typeorm';
+import { Tarefas } from '../entities/';
+import { CreateTasks1633629642656 } from '../migrations/1633629642656-CreateTasks'
+import {getConnectionManager, getRepository} from 'typeorm/browser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ToastAndroid } from 'react-native';
+import React from 'react';
+import {ToastAndroid} from 'react-native';;
+import { text } from 'stream/consumers';
 
-import React, { useState } from 'react';
-
-async function DatabaseHelper(){
-  try{
-    const connectionManager = getConnectionManager();
-    if(connectionManager.has('default')) return connectionManager.get();
-    const conexao = connectionManager.create({
-      type: 'react-native',
-      database: 'tasksdb',
-      location: 'default',
-      logging: __DEV__ ? 'all' : ['error'],
-      synchronize: false,
-      entities:[
-        Tarefas
-      ]
-    })
-    await conexao.connect();
-    const synchronized = AsyncStorage.getItem('@synchronized')
-    if(synchronized != 'done')
-    {
-      await conexao.synchronize();
-      await AsyncStorage.setItem('@synchronized', 'done');
+class DatabaseHelper extends React.Component {
+  static getInstance = async () => {
+    try {
+      const connectionManager = getConnectionManager();
+      if (connectionManager.has('default')) {
+        return connectionManager.get();
+      } else {
+        const conexao = connectionManager.create({
+          type: 'react-native',
+          database: 'tasksdb',
+          location: 'default',
+          logging: __DEV__ ? 'all' : ['error'],
+          synchronize: false,
+          migrations: [
+            CreateTasks1633629642656
+          ],
+          entities: [
+            Tarefas
+          ],
+        });
+        await conexao.connect();
+        let dbSync = await AsyncStorage.getItem('@schema_synchronized');
+        if (dbSync === null) {
+          await conexao.synchronize();
+          await AsyncStorage.setItem('@schema_synchronized', 'true');
+        }
+        await conexao.runMigrations();
+        return conexao;
+      }
+    } catch (e) {
+      ToastAndroid.show(
+        'Ocorreu um erro ao se conectar com o banco de dados!',
+        ToastAndroid.LONG,
+      );
+      console.error(e);
     }
-    return conexao;
-  }
-  catch(e){
-    console.error(e);
-    ToastAndroid.show('Erro ao se conectar com o banco de dados!', ToastAndroid.LONG)
-  }
+  };
 }
 
 export default DatabaseHelper;

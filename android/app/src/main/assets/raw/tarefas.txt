@@ -1,0 +1,2 @@
+INSERT INTO `tarefas` (`NOME`,`PRIORIDADE`, `DESCRICAO`, `STATUS`, `DATA_CRIACAO`, `DATA_CONCLUSAO`) VALUES 
+('teste migration','describe','pendete', 'hoje', '');
