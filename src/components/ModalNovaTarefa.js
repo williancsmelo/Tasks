@@ -12,7 +12,7 @@ import {Picker} from '@react-native-picker/picker';
 import { Button, Text } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup'
-import { insereTarefa, obterTarefas } from '../database/models/baseModel';
+import { insereTarefa, obterTarefas } from '../database/Models';
 import Loader from 'react-native-modal-loader';
 
 const novaTarefaValidation = yup.object().shape({
@@ -30,18 +30,25 @@ export default function({visible, toggleModal}) {
   };
   async function salvarTarefa(dados){
     setIsLoading(true);
-    const currentdate = new Date(); 
+    const currentdate = new Date();
+    let horas = currentdate.getHours()
+    if((horas - 10) < 0){
+      horas = '0' + horas
+    }
+    let minutos = currentdate.getMinutes()
+    if((minutos - 10) < 0){
+      minutos = '0' + minutos
+    }
     const datetime =  currentdate.getDate() + "/"
                 + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " @ "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds();
+                + currentdate.getFullYear() + "  |  "  
+                + horas + ":" + minutos
+                
     const objEnvio = {
       nome: dados.nome,
       prioridade: dados.prioridade,
       descricao: dados.descricao,
-      status: 'pendente',
+      status: 'Pendente',
       dataCriacao: datetime,
       dataConclusao:''
     }
@@ -75,7 +82,7 @@ export default function({visible, toggleModal}) {
         <Formik
           initialValues = {{
             nome: null,
-            prioridade: 2,
+            prioridade: 'Media',
             descricao: ''
           }}
           onSubmit = {(values) => salvarTarefa(values)}
@@ -137,10 +144,10 @@ export default function({visible, toggleModal}) {
                     onValueChange = {handleChange('prioridade')}
                     color = 'gray'
                   >
-                    <Picker.Item label = "Urgente" value = '4'/>
-                    <Picker.Item label = "Alta" value = '3'/>
-                    <Picker.Item label = "Média" value = '2'/>
-                    <Picker.Item label = "Baixa" value = '1'/>
+                    <Picker.Item label = "Urgente" value = 'Urgente'/>
+                    <Picker.Item label = "Alta" value = 'Alta'/>
+                    <Picker.Item label = "Média" value = 'Media'/>
+                    <Picker.Item label = "Baixa" value = 'Baixa'/>
                   </Picker>
                 </View>
                 <TextInput style = {{

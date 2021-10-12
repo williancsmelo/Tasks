@@ -1,26 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm/browser';
-import 'reflect-metadata'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Tarefas {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
-  @Column({ type: 'varchar', name: 'NOME', length: 70, nullable: false })
+  @Column({ type: 'varchar', name: 'NOME' })
   nome: string;
 
-  @Column({ type: 'varchar', name: 'PRIORIDADE', length: 10, nullable: false })
+  @Column({ type: 'varchar', name: 'PRIORIDADE' })
   prioridade: string;
 
-  @Column({ type: 'varchar', name: 'DESCRICAO', nullable: true })
+  @Column({ type: 'varchar', name: 'DESCRICAO' })
   descricao: string;
 
-  @Column({ type: 'varchar', name: 'STATUS', length: 10, nullable: false })
+  @Column({ type: 'varchar', name: 'STATUS' })
   status: string;
 
-  @Column({ type: 'varchar', name: 'DATA_CRIACAO', length: 10, nullable: false })
+  @Column({ type: 'varchar', name: 'DATA_CRIACAO' })
   dataCriacao: string;
 
-  @Column({ type: 'varchar', name: 'DATA_CONCLUSAO', length: 10, nullable: true })
+  @Column({ type: 'varchar', name: 'DATA_CONCLUSAO' })
   dataConclusao: string;
 }

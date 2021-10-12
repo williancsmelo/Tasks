@@ -1,4 +1,4 @@
-import { Tarefas } from '../../entities';
+import { Tarefas } from '../entities';
 
 import {getRepository} from 'typeorm';
 
@@ -10,7 +10,7 @@ export async function insereTarefa(tarefa){
   }
   catch(e){
     console.error(e);
-    return 'error'
+    return ['error']
   }
 }
 
@@ -18,8 +18,16 @@ export async function obterTarefas(){
   try{
     const queryResult = await getRepository(Tarefas)
       .createQueryBuilder('tasks')
-      .select('*')
-      .getMany();
+      .select([
+        'tasks.id AS id',
+        'tasks.NOME AS nome',
+        'tasks.PRIORIDADE AS prioridade',
+        'tasks.DESCRICAO AS descricao',
+        'tasks.STATUS AS status',
+        'tasks.DATA_CRIACAO AS dataCriacao',
+        'tasks.DATA_CONCLUSAO AS dataConclusao',
+      ])
+      .getRawMany();
 
     console.info('Tarefas consultadas: ', queryResult)
     return queryResult;
