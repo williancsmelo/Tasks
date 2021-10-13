@@ -7,7 +7,6 @@ import {
   StyleSheet
 } from 'react-native';
 import {  Text } from 'react-native-paper';
-import * as yup from 'yup'
 import { apagarTarefaPorID, toggleStatus } from '../database/Models';
 import { Icon } from 'react-native-elements'
 

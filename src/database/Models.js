@@ -33,7 +33,7 @@ export async function insereTarefa(tarefa){
   }
 }
 
-export async function obterTarefas(){
+export async function obterTarefas(status){
   try{
     const queryResult = await getRepository(Tarefas)
       .createQueryBuilder('tasks')
@@ -46,10 +46,11 @@ export async function obterTarefas(){
         'tasks.DATA_CRIACAO AS dataCriacao',
         'tasks.DATA_CONCLUSAO AS dataConclusao',
       ])
-      .getRawMany();
+      if(status != null) { queryResult.where('STATUS = :status',{status: status}) }
+      const finalQuery = queryResult.getRawMany();
 
-    console.info('Tarefas consultadas: ', queryResult)
-    return queryResult;
+    console.info('Tarefas consultadas: ', finalQuery)
+    return finalQuery;
   }
   catch(e){
     console.error('Erro ao consultar tarefas: ', e);
