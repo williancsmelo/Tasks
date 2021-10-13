@@ -1,64 +1,42 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import {
   View,
   TouchableOpacity,
-  Alert,
   Modal,
-  TextInput,
   ToastAndroid,
   StyleSheet
 } from 'react-native';
-import { Icon } from 'react-native-elements'
-import {Picker} from '@react-native-picker/picker';
-import { Button, Text } from 'react-native-paper';
-import { Formik } from 'formik';
+import {  Text } from 'react-native-paper';
 import * as yup from 'yup'
-import { insereTarefa, obterTarefas } from '../database/Models';
-import Loader from 'react-native-modal-loader';
+import { apagarTarefaPorID, toggleStatus } from '../database/Models';
+import { Icon } from 'react-native-elements'
 
-const novaTarefaValidation = yup.object().shape({
-  nome: yup
-    .string('Insira um nome para a tarefa')
-    .required('Insira um nome para a tarefa')
-});
-
-export default function({visible, toggleModal, tarefa}) {
-  const [isLoading, setIsLoading] = useState(false)
-  async function cancelarTarefa(){
-    const tarefas = await obterTarefas();
-    console.log(tarefas);
-    toggleModal();
-  };
-  async function salvarTarefa(dados){
-    setIsLoading(true);
-    const currentdate = new Date(); 
-    const datetime =  currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " @ "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds();
-    const objEnvio = {
-      nome: dados.nome,
-      prioridade: dados.prioridade,
-      descricao: dados.descricao,
-      status: 'pendente',
-      dataCriacao: datetime,
-      dataConclusao:''
-    }
-    const envio = await insereTarefa(objEnvio);
-    setIsLoading(false);
-    if(envio == 'ok'){
-      ToastAndroid.show('Tarefa adicionada com sucesso!', ToastAndroid.LONG);
-      toggleModal();
+export default function({visible, toggleModal, tarefa, atualizaTarefas}) {
+  async function apagarTarefa(){
+    const req = await apagarTarefaPorID(tarefa.id)
+    if(req == 'ok'){
+      ToastAndroid.show('Tarefa apagada com sucesso!', ToastAndroid.LONG)
     } else {
-      ToastAndroid.show('Erro ao adicionar a tarefa', ToastAndroid.LONG)
+      ToastAndroid.show('Erro ao apagar tarefa', ToastAndroid.LONG)
     }
-
-    const tarefas = await obterTarefas();
-    console.log(tarefas)
-  };
-
+    atualizaTarefas();
+    toggleModal();
+  }
+  async function atualizarStatus(){
+    const status = tarefa.status
+    const req = await toggleStatus(tarefa.id, tarefa.status)
+    if(req == 'ok'){
+      if(status == 'Pendente'){
+        ToastAndroid.show('Tarefa concluída!', ToastAndroid.LONG)
+      } else { ToastAndroid.show('Tarefa alterada para pendente!', ToastAndroid.LONG) }
+    } else {
+      if(status == 'Pendente'){
+        ToastAndroid.show('Erro ao concluir tarefa', ToastAndroid.LONG)
+      } else { ToastAndroid.show('Erro ao desfazer tarefa', ToastAndroid.LONG) }
+    }
+    atualizaTarefas();
+    toggleModal();
+  }
   return(
     <Modal 
       visible = {visible}
@@ -66,7 +44,6 @@ export default function({visible, toggleModal, tarefa}) {
       onRequestClose = {() => toggleModal()}
       animationType = 'fade'
     >
-      <Loader loading = {isLoading} color = 'blue'/>
       <View style={{
         backgroundColor: 'rgba(0,0,0,0.2)',
         flex: 1,
@@ -130,8 +107,7 @@ export default function({visible, toggleModal, tarefa}) {
               <View style = {{ width: 5 }}/>
               <Text style = {{ 
                 fontSize: 15,
-                fontWeight: tarefa.status == 'Pendente' ? 'normal' : 'bold',
-                color: tarefa.status == 'Pendente' ? 'orange' : '#00ff00'
+                color: tarefa.status == 'Pendente' ? 'orange' : '#18C10D'
                 }}
               >
                 {tarefa.status}
@@ -189,6 +165,63 @@ export default function({visible, toggleModal, tarefa}) {
                 </Text>
               </View>
             )}
+            <View style = { styles.viewButtons }>
+              <TouchableOpacity 
+                style = {styles.buttonCancelar}
+                onPress = {() => toggleModal()}
+              >
+                <Text style = {{ fontWeight:'bold' }}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style = {styles.buttonApagar}
+                onPress = {() => apagarTarefa()}
+              >
+                <Icon
+                  name='trash-outline'
+                  type = 'ionicon'
+                  color = 'white'
+                  size = {22}
+                />
+                <Text style = {{ fontWeight:'bold', color: 'white' }}>Apagar</Text>
+              </TouchableOpacity>
+              {tarefa.status == 'Pendente' ? (
+                <TouchableOpacity 
+                  style = {styles.buttonConcluir}
+                  onPress = {() => atualizarStatus()}
+                >
+                  <Icon
+                    name='checkmark-outline'
+                    type = 'ionicon'
+                    color = 'white'
+                    size = {22}
+                  />
+                  <Text style = {{ fontWeight:'bold', color: 'white' }}>
+                    Concluir
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity 
+                  style = {styles.buttonConcluir}
+                  onPress = {() => atualizarStatus()}
+                >
+                  <Icon
+                    name='arrow-undo-outline'
+                    type = 'ionicon'
+                    color = 'white'
+                    size = {22}
+                    style = {{right: 2}}
+                  />
+                  <Text style = {{ 
+                    fontWeight:'bold', 
+                    color: 'white'
+                    }}
+                  >
+                    Desfazer
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+            </View>
           </View>
         </View>
       </View>
@@ -200,5 +233,39 @@ const styles = StyleSheet.create({
   viewItem:{
     flexDirection: 'row',
     marginBottom: 7
+  },
+  viewButtons:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 7
+  },
+  buttonCancelar:{
+    height: 50,
+    borderRadius: 7,
+    borderColor: 'blue',
+    borderWidth: 1,
+    alignItems:'center',
+    justifyContent:'center',
+    width: '30%'
+  },
+  buttonApagar:{
+    height: 50,
+    borderRadius: 7,
+    borderWidth: 1,
+    alignItems:'center',
+    justifyContent:'center',
+    width: '30%',
+    backgroundColor: '#B11414',
+    flexDirection:'row'
+  },
+  buttonConcluir:{
+    height: 50,
+    borderRadius: 7,
+    borderWidth: 1,
+    alignItems:'center',
+    justifyContent:'center',
+    width: '30%',
+    backgroundColor: 'blue',
+    flexDirection:'row'
   },
 })

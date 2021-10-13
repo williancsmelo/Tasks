@@ -14,6 +14,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup'
 import { insereTarefa, obterTarefas } from '../database/Models';
 import Loader from 'react-native-modal-loader';
+import { EventRegister } from 'react-native-event-listeners'
 
 const novaTarefaValidation = yup.object().shape({
   nome: yup
@@ -29,27 +30,13 @@ export default function({visible, toggleModal}) {
     toggleModal();
   };
   async function salvarTarefa(dados){
-    setIsLoading(true);
-    const currentdate = new Date();
-    let horas = currentdate.getHours()
-    if((horas - 10) < 0){
-      horas = '0' + horas
-    }
-    let minutos = currentdate.getMinutes()
-    if((minutos - 10) < 0){
-      minutos = '0' + minutos
-    }
-    const datetime =  currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + "  |  "  
-                + horas + ":" + minutos
-                
+    setIsLoading(true);                
     const objEnvio = {
       nome: dados.nome,
       prioridade: dados.prioridade,
       descricao: dados.descricao,
       status: 'Pendente',
-      dataCriacao: datetime,
+      dataCriacao: '',
       dataConclusao:''
     }
     const envio = await insereTarefa(objEnvio);
@@ -60,9 +47,7 @@ export default function({visible, toggleModal}) {
     } else {
       ToastAndroid.show('Erro ao adicionar a tarefa', ToastAndroid.LONG)
     }
-
-    const tarefas = await obterTarefas();
-    console.log(tarefas)
+    EventRegister.emit('atualizarTarefas')
   };
 
   return(
@@ -82,7 +67,7 @@ export default function({visible, toggleModal}) {
         <Formik
           initialValues = {{
             nome: null,
-            prioridade: 'Media',
+            prioridade: 'Média',
             descricao: ''
           }}
           onSubmit = {(values) => salvarTarefa(values)}
@@ -146,7 +131,7 @@ export default function({visible, toggleModal}) {
                   >
                     <Picker.Item label = "Urgente" value = 'Urgente'/>
                     <Picker.Item label = "Alta" value = 'Alta'/>
-                    <Picker.Item label = "Média" value = 'Media'/>
+                    <Picker.Item label = "Média" value = 'Média'/>
                     <Picker.Item label = "Baixa" value = 'Baixa'/>
                   </Picker>
                 </View>

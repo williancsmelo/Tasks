@@ -12,7 +12,7 @@ LogBox.ignoreLogs([]);
 class App extends React.Component {
   async componentDidMount() {
     await DatabaseHelper.getInstance();
-    EventRegister.emit('myCustomEvent', 'connected')
+    EventRegister.emit('atualizarTarefas', 'connected')
   }
 
   render() {

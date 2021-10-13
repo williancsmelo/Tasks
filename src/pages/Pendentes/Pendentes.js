@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { Tarefas } from '../../entities';
-import { obterTarefas } from '../../database/Models';
+import { apagarTudo, obterTarefas } from '../../database/Models';
 import { 
   View, 
   Text, 
@@ -11,8 +11,7 @@ import {
 } from 'react-native'
 import CheckBox from '@react-native-community/checkbox';
 import { List, Divider } from 'react-native-paper'
-import Loader from 'react-native-modal-loader';
-import {getConnection, getConnectionManager, getRepository} from 'typeorm/browser'
+import {getConnectionManager} from 'typeorm/browser'
 import { EventRegister } from 'react-native-event-listeners'
 import styles from './styles'
 import ModalDetalhes from '../../components/ModalDetalhes';
@@ -42,14 +41,13 @@ export function Pendentes(){
   async function carregaTarefas(){
     const response = await obterTarefas()
     setTarefas(response)
-    console.log('response ===============', tarefas)
     setShowTarefas(true)
     if(response == 'error'){
       ToastAndroid.show('Erro ao acessar o banco de dados', ToastAndroid.LONG)
     }
   }
   useEffect(() => {
-    const listener = EventRegister.addEventListener('myCustomEvent', () => dados())
+    EventRegister.addEventListener('atualizarTarefas', () => dados())
     console.log('Conexão com o banco na tela Pendentes: ', getConnectionManager().has('default'))
     async function dados(){
       await carregaTarefas();
@@ -60,7 +58,6 @@ export function Pendentes(){
     setTarefaDetalhe(tarefa);
     setShowDetalhes(true);
   }
-
   function listaTarefas(item){
     let selecionado = false
     async function toggleCheckBox(){
@@ -86,17 +83,14 @@ export function Pendentes(){
               titleStyle = {{fontSize: 20}}
               description = {
                 <View style = {{ flexDirection:'row' }}>
-                  <Text style = {{
-                    fontWeight: 'bold',
-                    color: item.prioridade == 'urgente' ? 'red' : {}
-                    }}
+                  <Text style = {{ fontWeight: 'bold' }}
                   >
                     Prioridade:
                   </Text>
                   <View style = {{ width: 5 }}/>
                   <Text style = {{
-                    fontWeight: item.prioridade == 'urgente' ? 'bold' : 'normal',
-                    color: item.prioridade == 'urgente' ? 'red' : {}
+                    fontWeight: item.prioridade == 'Urgente' ? 'bold' : 'normal',
+                    color: item.prioridade == 'Urgente' ? 'red' : {}
                   }}>
                     {item.prioridade}
                   </Text>
@@ -106,11 +100,11 @@ export function Pendentes(){
                 fontWeight: item.prioridade == 'urgente' ? 'bold' : 'normal',
                 color: item.prioridade == 'urgente' ? 'red' : {}
               }}
-              left = {() => 
+              left = {() =>
                 <View style = {{ justifyContent: 'center' }}>
                   <CheckBox
                     disabled={false}
-                    value={tarefasSelecionadas.indexOf(item.id) > -1}
+                    value={selecionado}
                     onValueChange={() => toggleCheckBox()}
                     tintColors =  {{ true: 'blue', false: 'gray' }}
                   />
@@ -127,17 +121,13 @@ export function Pendentes(){
   return(
     <View>
       <ScrollView>
-        <Button
-          title = 'repository'
-          style={{backgroundColor: 'blue', width: '100%', height: 50}}
-          onPress = {() => carregaTarefas()}  
-        />
         {showTarefas && (tarefas.map(item => listaTarefas(item)))}
       </ScrollView>
       <ModalDetalhes
         visible = {showDetalhes}
         toggleModal = {() => setShowDetalhes(!showDetalhes)}
         tarefa = {tarefaDetalhe}
+        atualizaTarefas = {carregaTarefas}
       />
     </View>
   )
