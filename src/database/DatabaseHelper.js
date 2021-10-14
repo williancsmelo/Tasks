@@ -19,9 +19,6 @@ class DatabaseHelper extends React.Component {
           location: 'default',
           logging: __DEV__ ? 'all' : ['error'],
           synchronize: false,
-          migrations: [
-            CreateTasks1633629642656
-          ],
           entities: [
             Tarefas
           ],
@@ -32,7 +29,6 @@ class DatabaseHelper extends React.Component {
           await conexao.synchronize();
           await AsyncStorage.setItem('@schema_synchronized', 'true');
         }
-        await conexao.runMigrations();
         return conexao;
       }
     } catch (e) {

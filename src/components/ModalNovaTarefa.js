@@ -23,8 +23,6 @@ const novaTarefaValidation = yup.object().shape({
 export default function({visible, toggleModal}) {
   const [isLoading, setIsLoading] = useState(false)
   async function cancelarTarefa(){
-    const tarefas = await obterTarefas();
-    console.log(tarefas);
     toggleModal();
   };
   async function salvarTarefa(dados){
@@ -81,7 +79,8 @@ export default function({visible, toggleModal}) {
               padding:10
             }}>
               <Text style = {{
-                fontSize: 15
+                fontSize: 15,
+                color: 'black'
               }}>
                 Cadastrar nova tarefa
               </Text>
@@ -103,7 +102,8 @@ export default function({visible, toggleModal}) {
                 <Text style={{
                   marginTop: 10,
                   alignSelf:'flex-start',
-                  width:'90%'
+                  width:'90%',
+                  color: 'black'
                 }}>
                   Prioridade:
                 </Text>
