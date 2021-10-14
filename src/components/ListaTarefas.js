@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from 'react'
+import React, { useState } from 'react'
 import { 
   View,
   Text,
   TouchableOpacity,
   ScrollView
 } from 'react-native'
-import CheckBox from '@react-native-community/checkbox';
 import { List, Divider } from 'react-native-paper'
 import ModalDetalhes from './ModalDetalhes';
 
-export default function ListaTarefas({tarefas, carregaTarefas}){
+export default function ListaTarefas({tarefas, carregaTarefas, showStatus}){
   const [showDetalhes, setShowDetalhes] = useState(false)
   const [tarefaDetalhe, setTarefaDetalhe] = useState({
     id:'',
@@ -48,34 +47,43 @@ export default function ListaTarefas({tarefas, carregaTarefas}){
               title = {item.nome}
               titleStyle = {{fontSize: 20}}
               description = {
-                <View style = {{ flexDirection:'row' }}>
-                  <Text style = {{ fontWeight: 'bold' }}
-                  >
-                    Prioridade:
-                  </Text>
-                  <View style = {{ width: 5 }}/>
-                  <Text style = {{
-                    fontWeight: item.prioridade == 'Urgente' ? 'bold' : 'normal',
-                    color: item.prioridade == 'Urgente' ? 'red' : {}
-                  }}>
-                    {item.prioridade}
-                  </Text>
+                <View style = {{ flexDirection:'row', width:'100%' }}>
+                  <View style = {{flexDirection: 'row', width:280, justifyContent: 'space-between'}}>
+                    <View style = {{flexDirection: 'row'}}>
+                      <Text style = {{ fontWeight: 'bold' }}
+                      >
+                        Prioridade:
+                      </Text>
+                      <View style = {{ width: 5 }}/>
+                      <Text style = {{
+                        fontWeight: item.prioridade == 'Urgente' ? 'bold' : 'normal',
+                        color: item.prioridade == 'Urgente' ? 'red' : {}
+                      }}>
+                        {item.prioridade}
+                      </Text>
+                    </View>
+                    {showStatus && (
+                      <View style = {{flexDirection:'row'}}>
+                        <Text style = {{ fontWeight: 'bold' }}>
+                          Status: 
+                        </Text>
+                        <View style = {{ width: 5 }}/>
+                        <Text 
+                          style = {{ 
+                            color: item.status == 'Pendente' ? 'orange' : '#18C10D'
+                          }}
+                        >
+                          {item.status}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
               }
               descriptionStyle = {{
                 fontWeight: item.prioridade == 'urgente' ? 'bold' : 'normal',
-                color: item.prioridade == 'urgente' ? 'red' : {}
+                color: item.prioridade == 'urgente' ? 'red' : {},
               }}
-              left = {() =>
-                <View style = {{ justifyContent: 'center' }}>
-                  <CheckBox
-                    disabled={false}
-                    value={selecionado}
-                    onValueChange={() => toggleCheckBox()}
-                    tintColors =  {{ true: 'blue', false: 'gray' }}
-                  />
-                </View>
-              }
             />
           </View>
         </TouchableOpacity>

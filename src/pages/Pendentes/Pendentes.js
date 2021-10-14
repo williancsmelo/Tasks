@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { 
   View,
   ToastAndroid
@@ -19,11 +19,9 @@ function Pendentes(){
     dataCriacao:'',
     dataConclusao:''
   }])
-  const [showTarefas, setShowTarefas] = useState(false)
   async function carregaTarefas(){
     const response = await obterTarefas('Pendente')
     setTarefas(response)
-    setShowTarefas(true)
     if(response == 'error'){
       ToastAndroid.show('Erro ao acessar o banco de dados', ToastAndroid.LONG)
     }
@@ -37,12 +35,9 @@ function Pendentes(){
 
   return(
     <View>
-      {showTarefas &&(
         <ListaTarefas
           tarefas = {tarefas}
-          carregaTarefas = {carregaTarefas}
         />
-      )}
     </View>
   )
 }

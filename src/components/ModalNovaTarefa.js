@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
-  Alert,
   Modal,
   TextInput,
-  ToastAndroid
+  ToastAndroid,
+  Text
 } from 'react-native';
-import { Icon } from 'react-native-elements'
 import {Picker} from '@react-native-picker/picker';
-import { Button, Text } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup'
 import { insereTarefa, obterTarefas } from '../database/Models';

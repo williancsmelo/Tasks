@@ -46,10 +46,18 @@ export async function obterTarefas(status){
         'tasks.DATA_CRIACAO AS dataCriacao',
         'tasks.DATA_CONCLUSAO AS dataConclusao',
       ])
-      if(status != null) { queryResult.where('STATUS = :status',{status: status}) }
+      if(status == 'Concluído'){
+        queryResult
+          .where('STATUS = :status', {status: 'Concluído'})
+          .orderBy('tasks.DATA_CONCLUSAO', 'DESC')
+      } else if (status == 'Pendente'){
+        queryResult
+          .where('STATUS = :status', {status: 'Pendente'})
+          .orderBy('tasks.DATA_CRIACAO', 'DESC')
+      } else {
+        console.error('Erro ao consultar tarefas, nenhum status foi especificado')
+      }
       const finalQuery = queryResult.getRawMany();
-
-    console.info('Tarefas consultadas: ', finalQuery)
     return finalQuery;
   }
   catch(e){

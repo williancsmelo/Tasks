@@ -9,8 +9,9 @@ import {
 import {  Text } from 'react-native-paper';
 import { apagarTarefaPorID, toggleStatus } from '../database/Models';
 import { Icon } from 'react-native-elements'
+import { EventRegister } from 'react-native-event-listeners';
 
-export default function({visible, toggleModal, tarefa, atualizaTarefas}) {
+export default function({visible, toggleModal, tarefa}) {
   async function apagarTarefa(){
     const req = await apagarTarefaPorID(tarefa.id)
     if(req == 'ok'){
@@ -18,7 +19,7 @@ export default function({visible, toggleModal, tarefa, atualizaTarefas}) {
     } else {
       ToastAndroid.show('Erro ao apagar tarefa', ToastAndroid.LONG)
     }
-    atualizaTarefas();
+    EventRegister.emit('atualizarTarefas')
     toggleModal();
   }
   async function atualizarStatus(){
@@ -33,7 +34,7 @@ export default function({visible, toggleModal, tarefa, atualizaTarefas}) {
         ToastAndroid.show('Erro ao concluir tarefa', ToastAndroid.LONG)
       } else { ToastAndroid.show('Erro ao desfazer tarefa', ToastAndroid.LONG) }
     }
-    atualizaTarefas();
+    EventRegister.emit('atualizarTarefas')
     toggleModal();
   }
   return(

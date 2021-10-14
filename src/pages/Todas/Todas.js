@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 
 import { EventRegister } from 'react-native-event-listeners'
 
@@ -7,7 +7,6 @@ import { obterTarefas } from '../../database/Models';
 import ListaTarefas from '../../components/ListaTarefas';
 
 function Todas(){
-  const [showTarefas, setShowTarefas] = useState(false)
   const [tarefas, setTarefas] = useState([{
     id:'',
     nome:'',
@@ -18,10 +17,11 @@ function Todas(){
     dataConclusao:''
   }])
   async function carregaTarefas(){
-    const response = await obterTarefas()
-    setTarefas(response)
-    setShowTarefas(true)
-    if(response == 'error'){
+    const pendentes = await obterTarefas('Pendente');
+    const concluidas = await obterTarefas('Concluído');
+    const tudo = [...pendentes, ...concluidas];
+    setTarefas(tudo);
+    if(pendentes == 'error' || concluidas == 'error'){
       ToastAndroid.show('Erro ao acessar o banco de dados', ToastAndroid.LONG)
     }
   }
@@ -33,12 +33,10 @@ function Todas(){
   }, [])
   return(
     <View>
-      {showTarefas &&(
         <ListaTarefas
           tarefas = {tarefas}
-          carregaTarefas = {carregaTarefas}
+          showStatus
         />
-      )}
     </View>
   )
 }
