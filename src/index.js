@@ -5,6 +5,8 @@ import Tabs from './routes/Tabs'
 import ButtonAdd from './components/ButtonAdd';
 import DatabaseHelper from './database/DatabaseHelper'
 import { EventRegister } from 'react-native-event-listeners'
+import { Provider } from 'react-redux'
+import store from './store/store'
 
 // ignore specific yellowbox warnings - Require cycle
 LogBox.ignoreLogs([]);
@@ -12,15 +14,17 @@ LogBox.ignoreLogs([]);
 class App extends React.Component {
   async componentDidMount() {
     await DatabaseHelper.getInstance();
-    EventRegister.emit('atualizarTarefas', 'connected')
+    EventRegister.emit('atualizarTarefas')
   }
 
   render() {
     return (
-      <NavigationContainer>
-        <Tabs />
-        <ButtonAdd/>
-      </NavigationContainer>
+      <Provider store = {store}>
+        <NavigationContainer>
+          <Tabs />
+          <ButtonAdd/>
+        </NavigationContainer>
+      </Provider>
     );
   }
 }

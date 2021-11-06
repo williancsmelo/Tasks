@@ -5,14 +5,17 @@ import {
   Modal,
   TextInput,
   ToastAndroid,
-  Text
+  Text,
+  StyleSheet
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { Formik } from 'formik';
 import * as yup from 'yup'
-import { insereTarefa, obterTarefas } from '../database/Models';
+import { insereTarefa } from '../database/Models';
 import Loader from 'react-native-modal-loader';
 import { EventRegister } from 'react-native-event-listeners'
+
+import { general } from '../styles';
 
 const novaTarefaValidation = yup.object().shape({
   nome: yup
@@ -54,12 +57,7 @@ export default function({visible, toggleModal}) {
       animationType = 'fade'
     >
       <Loader loading = {isLoading} color = 'blue'/>
-      <View style={{
-        backgroundColor: 'rgba(0,0,0,0.2)',
-        flex: 1,
-        justifyContent: 'center',
-        alignItems:'center'
-      }}>
+      <View style={styles.viewPageModal}>
         <Formik
           initialValues = {{
             nome: null,
@@ -213,3 +211,7 @@ export default function({visible, toggleModal}) {
     </Modal>
   )
 }
+
+const styles = StyleSheet.create({
+  ...general
+})

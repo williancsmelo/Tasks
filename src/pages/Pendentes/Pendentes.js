@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { 
   View,
-  ToastAndroid
+  ToastAndroid,
+  TouchableOpacity
 } from 'react-native'
+import { useSelector } from 'react-redux';
+import { connect } from 'react-redux'
+
+import { colors } from '../../styles/colors';
 
 import { EventRegister } from 'react-native-event-listeners'
 
@@ -27,17 +32,19 @@ function Pendentes(){
     }
   }
   useEffect(() => {
-    EventRegister.addEventListener('atualizarTarefas', () => dados())
-    async function dados(){
-      await carregaTarefas();
-    }
+    EventRegister.addEventListener(
+      'atualizarTarefas', 
+      () => carregaTarefas()
+    )
   }, [])
+  function setColor(){
 
+  }
   return(
     <View>
-        <ListaTarefas
-          tarefas = {tarefas}
-        />
+      <ListaTarefas
+        tarefas = {tarefas}
+      />
     </View>
   )
 }

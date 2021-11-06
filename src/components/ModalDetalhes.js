@@ -6,10 +6,12 @@ import {
   ToastAndroid,
   StyleSheet
 } from 'react-native';
-import {  Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { apagarTarefaPorID, toggleStatus } from '../database/Models';
 import { Icon } from 'react-native-elements'
 import { EventRegister } from 'react-native-event-listeners';
+
+import { colors, general } from '../styles';
 
 export default function({visible, toggleModal, tarefa}) {
   async function apagarTarefa(){
@@ -28,11 +30,11 @@ export default function({visible, toggleModal, tarefa}) {
     if(req == 'ok'){
       if(status == 'Pendente'){
         ToastAndroid.show('Tarefa concluída!', ToastAndroid.LONG)
-      } else { ToastAndroid.show('Tarefa alterada para pendente!', ToastAndroid.LONG) }
+      } else { ToastAndroid.show('Tarefa alterada para pendente!') }
     } else {
       if(status == 'Pendente'){
-        ToastAndroid.show('Erro ao concluir tarefa', ToastAndroid.LONG)
-      } else { ToastAndroid.show('Erro ao desfazer tarefa', ToastAndroid.LONG) }
+        ToastAndroid.show('Erro ao concluir tarefa')
+      } else { ToastAndroid.show('Erro ao desfazer tarefa') }
     }
     EventRegister.emit('atualizarTarefas')
     toggleModal();
@@ -44,133 +46,97 @@ export default function({visible, toggleModal, tarefa}) {
       onRequestClose = {() => toggleModal()}
       animationType = 'fade'
     >
-      <View style={{
-        backgroundColor: 'rgba(0,0,0,0.2)',
-        flex: 1,
-        justifyContent: 'center',
-        alignItems:'center'
-      }}>
-        <View style = {{
-          flexDirection: 'column',
-          backgroundColor: '#fff',
-          width: '90%',
-          alignItems:'center',
-          borderRadius: 7,
-          padding:10
-        }}>
-          <Text style = {{
-            fontSize: 18,
-            marginBottom: 7
-          }}>
+      <View style = {styles.viewPageModal}>
+        <View style = {styles.viewModal}>
+          <Text style = {styles.titleModal}>
             Detalhes
           </Text>
           <View style = {{width: '90%'}}>
             <View style = {styles.viewItem}>
-              <Text style = {{
-                fontWeight: 'bold',
-                fontSize: 15
-                }}
+              <Text style = {styles.textLabel}
               >
-                Tarefa:
+                Tarefa:{' '}
               </Text>
-              <View style = {{ width: 5 }}/>
-              <Text style = {{ fontSize: 15 }}>
+              <Text style = {styles.textDado}>
                 {tarefa.nome}
               </Text>
             </View>
             <View style = {styles.viewItem}>
-              <Text style = {{
-                fontWeight: 'bold',
-                fontSize: 15
-                }}
-              >
-                Prioridade:
+              <Text style = {styles.textLabel}>
+                Prioridade:{' '}
               </Text>
-              <View style = {{ width: 5 }}/>
-              <Text style = {{ 
-                fontSize: 15,
-                fontWeight: tarefa.prioridade == 'Urgente' ? 'bold' : 'normal',
-                color: tarefa.prioridade == 'Urgente' ? 'red' : 'black'
-                }}
-              >
+              <Text style = {[styles.textDado,{
+                fontWeight: tarefa.prioridade == 'Urgente' ? 
+                  'bold' : 
+                  'normal',
+                color: tarefa.prioridade == 'Urgente' ?
+                  colors.textUrgente :
+                  colors.textDefault
+              }]}>
                 {tarefa.prioridade}
               </Text>
             </View>
             <View style = {styles.viewItem}>
-              <Text style = {{
-                fontWeight: 'bold',
-                fontSize: 15
-                }}
-              >
-                Status:
+              <Text style = {styles.textLabel}>
+                Status:{' '}
               </Text>
-              <View style = {{ width: 5 }}/>
-              <Text style = {{ 
-                fontSize: 15,
-                color: tarefa.status == 'Pendente' ? 'orange' : '#18C10D'
-                }}
+              <Text style = {[styles.textDado,{
+                color: tarefa.status == 'Pendente' ? 
+                  colors.textPendente : 
+                  colors.textConcluido
+              }]}
               >
                 {tarefa.status}
               </Text>
             </View>
             {tarefa.descricao != '' ? (
               <View style = {styles.viewItem}>
-                <Text style = {{
-                  fontWeight: 'bold',
-                  fontSize: 15
-                  }}
-                >
-                  Descrição:
+                <Text style = {styles.textLabel}>
+                  Descrição:{' '}
                 </Text>
-                <View style = {{ width: 5 }}/>
-                <Text style = {{ fontSize: 15 }}>
+                <Text style = {styles.textDado}>
                   {tarefa.descricao}
                 </Text>
               </View>
             ) : (
-              <Text style = {{
-                fontWeight: 'bold',
-                fontSize: 15,
-                marginBottom: 7
-                }}
-              >
-                Sem Descrição
-              </Text>
+              <View style = {styles.viewItem}>
+                <Text style = {styles.textLabel}
+                >
+                  Sem Descrição
+                </Text>
+              </View>
             )}
             <View style = {styles.viewItem}>
-              <Text style = {{
-                fontWeight: 'bold',
-                fontSize: 15
-                }}
+              <Text style = {styles.textLabel}
               >
-                Data de Criação:
+                Data de Criação:{' '}
               </Text>
-              <View style = {{ width: 5 }}/>
-              <Text style = {{ fontSize: 15 }}>
+              <Text style = {styles.textDado}>
                 {tarefa.dataCriacao}
               </Text>
             </View>
             {tarefa.dataConclusao != '' && (
               <View style = {styles.viewItem}>
-                <Text style = {{
-                  fontWeight: 'bold',
-                  fontSize: 15
-                  }}
+                <Text style = {styles.textLabel}
                 >
-                  Data de Conclusão:
+                  Data de Conclusão:{' '}
                 </Text>
-                <View style = {{ width: 5 }}/>
-                <Text style = {{ fontSize: 15 }}>
+                <Text style = {styles.textDado}>
                   {tarefa.dataConclusao}
                 </Text>
               </View>
             )}
-            <View style = { styles.viewButtons }>
-              <TouchableOpacity 
+            <View style = {styles.viewButtons}>
+              <TouchableOpacity
                 style = {styles.buttonCancelar}
                 onPress = {() => toggleModal()}
               >
-                <Text style = {{ fontWeight:'bold' }}>Cancelar</Text>
+                <Text style = {{
+                  fontWeight:'bold',
+                  color: colors.textDefault
+                }}>
+                  Cancelar
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style = {styles.buttonApagar}
@@ -179,10 +145,15 @@ export default function({visible, toggleModal, tarefa}) {
                 <Icon
                   name='trash-outline'
                   type = 'ionicon'
-                  color = 'white'
+                  color = {colors.background}
                   size = {22}
                 />
-                <Text style = {{ fontWeight:'bold', color: 'white' }}>Apagar</Text>
+                <Text style = {{
+                  fontWeight:'bold', 
+                  color: colors.background 
+                }}>
+                  Apagar
+                </Text>
               </TouchableOpacity>
               {tarefa.status == 'Pendente' ? (
                 <TouchableOpacity 
@@ -192,10 +163,13 @@ export default function({visible, toggleModal, tarefa}) {
                   <Icon
                     name='checkmark-outline'
                     type = 'ionicon'
-                    color = 'white'
+                    color = {colors.background}
                     size = {22}
                   />
-                  <Text style = {{ fontWeight:'bold', color: 'white' }}>
+                  <Text style = {{
+                    fontWeight:'bold', 
+                    color: colors.background 
+                  }}>
                     Concluir
                   </Text>
                 </TouchableOpacity>
@@ -207,20 +181,19 @@ export default function({visible, toggleModal, tarefa}) {
                   <Icon
                     name='arrow-undo-outline'
                     type = 'ionicon'
-                    color = 'white'
+                    color = {colors.background}
                     size = {22}
                     style = {{right: 2}}
                   />
                   <Text style = {{ 
                     fontWeight:'bold', 
-                    color: 'white'
+                    color: colors.background
                     }}
                   >
                     Desfazer
                   </Text>
                 </TouchableOpacity>
               )}
-
             </View>
           </View>
         </View>
@@ -230,6 +203,8 @@ export default function({visible, toggleModal, tarefa}) {
 }
 
 const styles = StyleSheet.create({
+  ...general,
+
   viewItem:{
     flexDirection: 'row',
     marginBottom: 7
@@ -242,30 +217,39 @@ const styles = StyleSheet.create({
   buttonCancelar:{
     height: 50,
     borderRadius: 7,
-    borderColor: 'blue',
-    borderWidth: 1,
+    borderColor: colors.button,
+    borderWidth: 1.5,
     alignItems:'center',
     justifyContent:'center',
-    width: '30%'
+    width: '32%'
   },
   buttonApagar:{
     height: 50,
     borderRadius: 7,
-    borderWidth: 1,
+    borderWidth: 1.5,
+    borderColor: colors.textDefault,
     alignItems:'center',
     justifyContent:'center',
-    width: '30%',
-    backgroundColor: '#B11414',
+    width: '32%',
+    backgroundColor: colors.deleteButton,
     flexDirection:'row'
   },
   buttonConcluir:{
+    borderColor: colors.textDefault,
     height: 50,
     borderRadius: 7,
-    borderWidth: 1,
+    borderWidth: 1.5,
     alignItems:'center',
     justifyContent:'center',
-    width: '30%',
-    backgroundColor: 'blue',
+    width: '32%',
+    backgroundColor: colors.button,
     flexDirection:'row'
   },
+
+  textLabel: {
+    fontWeight: 'bold',
+    fontSize: 15
+  },
+
+  textDado: {fontSize: 15},
 })
