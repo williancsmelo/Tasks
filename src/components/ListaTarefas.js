@@ -35,12 +35,12 @@ export default function ListaTarefas({tarefas, carregaTarefas, showStatus}){
                         Prioridade:{' '}
                       </Text>
                       <Text style = {{
-                        fontWeight: item.prioridade == 'Urgente' ? 
+                        fontWeight: item.prioridade == 4 ? 
                           'bold' : 
                           'normal',
-                        color: item.prioridade == 'Urgente' ?
+                        color: item.prioridade == 4 ?
                           colors.textUrgente : 
-                          {}//colors.textDefault
+                          colors.textDefault
                       }}>
                         {item.prioridade}
                       </Text>

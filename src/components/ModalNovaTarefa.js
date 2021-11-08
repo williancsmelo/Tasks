@@ -61,7 +61,7 @@ export default function({visible, toggleModal}) {
         <Formik
           initialValues = {{
             nome: null,
-            prioridade: 'Média',
+            prioridade: 2,
             descricao: ''
           }}
           onSubmit = {(values) => salvarTarefa(values)}
@@ -125,10 +125,10 @@ export default function({visible, toggleModal}) {
                     onValueChange = {handleChange('prioridade')}
                     color = 'gray'
                   >
-                    <Picker.Item label = "Urgente" value = 'Urgente'/>
-                    <Picker.Item label = "Alta" value = 'Alta'/>
-                    <Picker.Item label = "Média" value = 'Média'/>
-                    <Picker.Item label = "Baixa" value = 'Baixa'/>
+                    <Picker.Item label = "Urgente" value = {4}/>
+                    <Picker.Item label = "Alta" value = {3}/>
+                    <Picker.Item label = "Média" value = {2}/>
+                    <Picker.Item label = "Baixa" value = {1}/>
                   </Picker>
                 </View>
                 <TextInput style = {{

@@ -66,10 +66,10 @@ export default function({visible, toggleModal, tarefa}) {
                 Prioridade:{' '}
               </Text>
               <Text style = {[styles.textDado,{
-                fontWeight: tarefa.prioridade == 'Urgente' ? 
+                fontWeight: tarefa.prioridade == 4 ? 
                   'bold' : 
                   'normal',
-                color: tarefa.prioridade == 'Urgente' ?
+                color: tarefa.prioridade == 4 ?
                   colors.textUrgente :
                   colors.textDefault
               }]}>
