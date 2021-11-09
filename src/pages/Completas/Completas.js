@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
 
+import {colors} from '../../styles/'
+
 import { EventRegister } from 'react-native-event-listeners'
 
 import { obterTarefas } from '../../database/Models';
@@ -30,7 +32,10 @@ function Completas(){
     }
   }, [])
   return(
-    <View>
+    <View style = {{
+      backgroundColor: colors.background,
+      height: '100%'
+    }}>
         <ListaTarefas
           tarefas = {tarefas}
         />

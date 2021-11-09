@@ -5,6 +5,7 @@ import { EventRegister } from 'react-native-event-listeners'
 
 import { obterTarefas } from '../../database/Models';
 import ListaTarefas from '../../components/ListaTarefas';
+import { colors } from '../../styles/';
 
 function Todas(){
   const [tarefas, setTarefas] = useState([{
@@ -32,11 +33,14 @@ function Todas(){
     }
   }, [])
   return(
-    <View>
-        <ListaTarefas
-          tarefas = {tarefas}
-          showStatus
-        />
+    <View style = {{
+      backgroundColor: colors.background,
+      height: '100%'
+    }}>
+      <ListaTarefas
+        tarefas = {tarefas}
+        showStatus
+      />
     </View>
   )
 }

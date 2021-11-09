@@ -46,14 +46,15 @@ export async function obterTarefas(status){
         'tasks.DATA_CRIACAO AS dataCriacao',
         'tasks.DATA_CONCLUSAO AS dataConclusao',
       ])
+      .orderBy('tasks.PRIORIDADE', 'DESC')
       if(status == 'Concluído'){
         queryResult
           .where('STATUS = :status', {status: 'Concluído'})
-          .orderBy('tasks.DATA_CONCLUSAO', 'DESC')
+          .addOrderBy('tasks.DATA_CONCLUSAO', 'DESC')
       } else if (status == 'Pendente'){
         queryResult
           .where('STATUS = :status', {status: 'Pendente'})
-          .orderBy('tasks.DATA_CRIACAO', 'DESC')
+          .addOrderBy('tasks.DATA_CRIACAO', 'DESC')
       } else {
         console.error('Erro ao consultar tarefas, nenhum status foi especificado')
       }

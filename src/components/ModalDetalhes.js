@@ -13,6 +13,8 @@ import { EventRegister } from 'react-native-event-listeners';
 
 import { colors, general } from '../styles';
 
+import { descricaoPrioridade } from '../utils/utilitarios';
+
 export default function({visible, toggleModal, tarefa}) {
   async function apagarTarefa(){
     const req = await apagarTarefaPorID(tarefa.id)
@@ -73,7 +75,7 @@ export default function({visible, toggleModal, tarefa}) {
                   colors.textUrgente :
                   colors.textDefault
               }]}>
-                {tarefa.prioridade}
+                {descricaoPrioridade(tarefa.prioridade)}
               </Text>
             </View>
             <View style = {styles.viewItem}>
@@ -145,12 +147,12 @@ export default function({visible, toggleModal, tarefa}) {
                 <Icon
                   name='trash-outline'
                   type = 'ionicon'
-                  color = {colors.background}
+                  color = {colors.textDeleteButton}
                   size = {22}
                 />
                 <Text style = {{
                   fontWeight:'bold', 
-                  color: colors.background 
+                  color: colors.textDeleteButton
                 }}>
                   Apagar
                 </Text>
@@ -248,8 +250,12 @@ const styles = StyleSheet.create({
 
   textLabel: {
     fontWeight: 'bold',
-    fontSize: 15
+    fontSize: 15,
+    color: colors.textDefault
   },
 
-  textDado: {fontSize: 15},
+  textDado: {
+    fontSize: 15,
+    color: colors.textDefault
+  },
 })

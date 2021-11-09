@@ -10,7 +10,7 @@ const general = {
 
   viewModal :{
     flexDirection: 'column',
-    backgroundColor: colors.background,
+    backgroundColor: colors.backgroundModal,
     width: '90%',
     alignItems:'center',
     borderRadius: 7,
@@ -19,7 +19,8 @@ const general = {
 
   titleModal: {
     fontSize: 18,
-    marginBottom: 7
+    marginBottom: 7,
+    color: colors.textDefault
   }
 }
 

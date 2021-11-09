@@ -15,7 +15,7 @@ import { insereTarefa } from '../database/Models';
 import Loader from 'react-native-modal-loader';
 import { EventRegister } from 'react-native-event-listeners'
 
-import { general } from '../styles';
+import { general, colors } from '../styles';
 
 const novaTarefaValidation = yup.object().shape({
   nome: yup
@@ -67,10 +67,19 @@ export default function({visible, toggleModal}) {
           onSubmit = {(values) => salvarTarefa(values)}
           validationSchema = {novaTarefaValidation}
         >
-          {({values, handleChange, handleSubmit, errors, touched, isValid, setFieldTouched}) => (
+          {({
+          values,
+          handleChange, 
+          handleSubmit, 
+          errors, 
+          touched, 
+          isValid, 
+          setFieldTouched,
+          setFieldValue
+          }) => (
             <View style = {{
               flexDirection: 'column',
-              backgroundColor: '#fff',
+              backgroundColor: colors.backgroundModal,
               width: '90%',
               alignItems:'center',
               borderRadius: 7,
@@ -78,7 +87,7 @@ export default function({visible, toggleModal}) {
             }}>
               <Text style = {{
                 fontSize: 15,
-                color: 'black'
+                color: colors.textDefault
               }}>
                 Cadastrar nova tarefa
               </Text>
@@ -89,8 +98,10 @@ export default function({visible, toggleModal}) {
                 paddingHorizontal: 20,
                 borderColor: isValid ? 'gray' : 'red',
                 marginTop: 10,
-                fontSize:15
+                fontSize:15,
+                color: colors.textDefault
               }}
+                placeholderTextColor = {colors.placeHolderText}
                 placeholder = 'Nome'
                 value = {values.nome}
                 onChangeText = {handleChange('nome')}
@@ -101,7 +112,7 @@ export default function({visible, toggleModal}) {
                   marginTop: 10,
                   alignSelf:'flex-start',
                   width:'90%',
-                  color: 'black'
+                  color: colors.textDefault
                 }}>
                   Prioridade:
                 </Text>
@@ -119,16 +130,33 @@ export default function({visible, toggleModal}) {
                     width: '100%',
                     paddingHorizontal: 20,
                     paddingVertical: 10,
+                    color: colors.textDefault
                   }}
+                    dropdownIconColor = {colors.textDefault}
                     enabled = {true}
                     selectedValue = {values.prioridade}
-                    onValueChange = {handleChange('prioridade')}
-                    color = 'gray'
+                    onValueChange = {value => setFieldValue('prioridade', value)}
                   >
-                    <Picker.Item label = "Urgente" value = {4}/>
-                    <Picker.Item label = "Alta" value = {3}/>
-                    <Picker.Item label = "Média" value = {2}/>
-                    <Picker.Item label = "Baixa" value = {1}/>
+                    <Picker.Item
+                      label = "Urgente" 
+                      value = {4} 
+                      key = {4}
+                    />
+                    <Picker.Item 
+                      label = "Alta" 
+                      value = {3} 
+                      key = {3}
+                    />
+                    <Picker.Item 
+                      label = "Média" 
+                      value = {2} 
+                      key = {2}
+                    />
+                    <Picker.Item 
+                      label = "Baixa" 
+                      value = {1} 
+                      key = {1}
+                    />
                   </Picker>
                 </View>
                 <TextInput style = {{
@@ -141,6 +169,7 @@ export default function({visible, toggleModal}) {
                   fontSize:15,
                   height:100,
                 }}
+                  placeholderTextColor = {colors.placeHolderText}
                   placeholder = 'Descrição'
                   multiline = {true}
                   textAlignVertical='top'
@@ -171,13 +200,17 @@ export default function({visible, toggleModal}) {
                   <View style = {{
                     borderWidth: 1,
                     borderRadius: 7,
-                    borderColor: 'blue',
+                    borderColor: colors.button,
                     height: '100%',
                     width: '100%',
                     alignItems:'center',
                     justifyContent: 'center'
                   }}>
-                    <Text style = {{fontSize: 15, fontWeight:'bold'}}>
+                    <Text style = {{
+                      fontSize: 15, 
+                      fontWeight:'bold',
+                      color: colors.textDefault
+                    }}>
                       Cancelar
                     </Text>
                   </View>
@@ -196,7 +229,7 @@ export default function({visible, toggleModal}) {
                     width: '100%',
                     alignItems:'center',
                     justifyContent: 'center',
-                    backgroundColor: isValid ? 'blue' : '#8C99F9'
+                    backgroundColor: isValid ? colors.button : colors.buttonDisabled
                   }}>
                     <Text style = {{fontSize: 15, fontWeight: 'bold', color: 'white'}}>
                       Salvar

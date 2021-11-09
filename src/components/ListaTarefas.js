@@ -8,6 +8,7 @@ import {
 import { List, Divider } from 'react-native-paper'
 import { colors } from '../styles/';
 import ModalDetalhes from './ModalDetalhes';
+import { descricaoPrioridade } from '../utils/utilitarios';
 
 export default function ListaTarefas({tarefas, carregaTarefas, showStatus}){
   const [showDetalhes, setShowDetalhes] = useState(false)
@@ -26,12 +27,19 @@ export default function ListaTarefas({tarefas, carregaTarefas, showStatus}){
           <View>
             <List.Item
               title = {item.nome}
-              titleStyle = {{fontSize: 20}}
+              titleStyle = {{
+                fontSize: 20,
+                color: colors.textDefault
+              }}
               description = {
                 <View>
                   <View>
                     <View style = {{flexDirection: 'row'}}>
-                      <Text style = {{fontWeight: 'bold'}}>
+                      <Text style = {{
+                        fontWeight: 'bold',
+                        color: colors.textDefault
+
+                        }}>
                         Prioridade:{' '}
                       </Text>
                       <Text style = {{
@@ -42,12 +50,16 @@ export default function ListaTarefas({tarefas, carregaTarefas, showStatus}){
                           colors.textUrgente : 
                           colors.textDefault
                       }}>
-                        {item.prioridade}
+                        {descricaoPrioridade(item.prioridade)}
                       </Text>
                     </View>
                     {showStatus && (
                       <View style = {{flexDirection:'row'}}>
-                        <Text style = {{fontWeight: 'bold'}}>
+                        <Text style = {{
+                          fontWeight: 'bold',
+                          color: colors.textDefault
+                        }}
+                        >
                           Status:{' '}
                         </Text>
                         <Text 

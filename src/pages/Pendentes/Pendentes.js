@@ -2,12 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { 
   View,
   ToastAndroid,
-  TouchableOpacity
 } from 'react-native'
-import { useSelector } from 'react-redux';
-import { connect } from 'react-redux'
 
-import { colors } from '../../styles/colors';
+import { colors } from '../../styles/';
 
 import { EventRegister } from 'react-native-event-listeners'
 
@@ -37,11 +34,11 @@ function Pendentes(){
       () => carregaTarefas()
     )
   }, [])
-  function setColor(){
-
-  }
   return(
-    <View>
+    <View style = {{
+      backgroundColor: colors.background, 
+      height: '100%'
+    }}>
       <ListaTarefas
         tarefas = {tarefas}
       />
